@@ -7,6 +7,7 @@ import { GameSetupView } from './views/GameSetupView'
 import { ActiveGameView } from './views/ActiveGameView'
 import { GameSummaryView } from './views/GameSummaryView'
 import { StatsView } from './views/StatsView'
+import { GamesHistoryView } from './views/GamesHistoryView'
 
 function App() {
   const [view, setView] = useState('home')
@@ -54,6 +55,16 @@ function App() {
           games={games}
           getPlayer={getPlayer}
           viewData={viewData}
+        />
+      )
+    case 'history':
+      return (
+        <GamesHistoryView
+          navigate={navigate}
+          games={games}
+          getPlayer={getPlayer}
+          deleteGame={deleteGame}
+          activeGameId={activeGameId}
         />
       )
     case 'stats':

@@ -33,6 +33,13 @@ export function HomeView({ navigate, activeGame }) {
       </button>
 
       <button
+        onClick={() => navigate('history')}
+        className="w-full py-4 rounded-2xl bg-surface-light text-white text-lg font-semibold active:scale-95 transition-transform"
+      >
+        Oyunlar
+      </button>
+
+      <button
         onClick={() => navigate('stats')}
         className="w-full py-4 rounded-2xl bg-surface-light text-white text-lg font-semibold active:scale-95 transition-transform"
       >
