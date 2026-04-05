@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Header } from '../components/Header'
 import { ConfirmDialog } from '../components/ConfirmDialog'
+import { calculateGameStats } from '../lib/statsCalculator'
 
 const PLAYER_COLORS = [
   { bg: 'bg-sky-500', ring: 'ring-sky-400', shadow: 'shadow-sky-500/30' },
@@ -119,6 +120,50 @@ export function ActiveGameView({ navigate, activeGame, getPlayer, addHand, undoL
           {selectedOkeys.length === 0 ? 'Ortada Kaldi' : 'Eli Kaydet'}
         </button>
       </div>
+
+      {/* Player stats */}
+      {activeGame.hands.length > 0 && (() => {
+        const gameStats = calculateGameStats(activeGame)
+        return (
+          <div className="px-4 mt-4">
+            <h3 className="text-slate-400 text-sm font-medium mb-2">Oyuncu Istatistikleri</h3>
+            <div className="flex flex-col gap-2">
+              {activeGame.playerIds.map((pid, idx) => {
+                const player = getPlayer(pid)
+                const s = gameStats[pid]
+                if (!s) return null
+                const color = PLAYER_COLORS[idx % PLAYER_COLORS.length]
+                return (
+                  <div key={pid} className="bg-surface rounded-xl px-3 py-2">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-white font-semibold text-sm">{player?.name || '?'}</span>
+                      <span className="text-okey font-bold text-sm">{s.totalOkeys} okey</span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-1.5 text-center">
+                      <div className="bg-surface-light rounded-lg py-1.5">
+                        <p className="text-white font-bold text-xs">{s.handsWithDoubleOkey}</p>
+                        <p className="text-slate-500 text-[10px]">Cift Okey</p>
+                      </div>
+                      <div className="bg-surface-light rounded-lg py-1.5">
+                        <p className="text-emerald-400 font-bold text-xs">{s.currentOkeyStreak}</p>
+                        <p className="text-slate-500 text-[10px]">Seri Okey</p>
+                      </div>
+                      <div className="bg-surface-light rounded-lg py-1.5">
+                        <p className="text-rose-400 font-bold text-xs">{s.currentDryStreak}</p>
+                        <p className="text-slate-500 text-[10px]">Seri Kuru</p>
+                      </div>
+                      <div className="bg-surface-light rounded-lg py-1.5">
+                        <p className="text-amber-400 font-bold text-xs">{s.maxOkeyStreak}</p>
+                        <p className="text-slate-500 text-[10px]">Max Seri</p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )
+      })()}
 
       {/* Hand history */}
       <div className="flex-1 mt-4 px-4 pb-4 overflow-y-auto">
